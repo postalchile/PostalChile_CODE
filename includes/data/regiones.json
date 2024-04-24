@@ -1,0 +1,66 @@
+[
+    {
+        "id": "13",
+        "region": "Metropolitana"
+    },
+    {
+        "id": "15",
+        "region": "Arica y Parinacota"
+    },
+    {
+        "id": "1",
+        "region": "Tarapaca"
+    },
+    {
+        "id": "2",
+        "region": "Antofagasta"
+    },
+    {
+        "id": "3",
+        "region": "Atacama"
+    },
+    {
+        "id": "4",
+        "region": "Coquimbo"
+    },
+    {
+        "id": "5",
+        "region": "Valparaiso"
+    },
+    {
+        "id": "6",
+        "region": "Libertador Bernardo Ohiggins"
+    },
+    {
+        "id": "7",
+        "region": "Maule"
+    },
+    {
+        "id": "8",
+        "region": "Bio Bio"
+    },
+    {
+        "id": "16",
+        "region": "Ñuble"
+    },
+    {
+        "id": "9",
+        "region": "Araucania"
+    },
+    {
+        "id": "14",
+        "region": "Los Rios"
+    },
+    {
+        "id": "10",
+        "region": "Los Lagos"
+    },
+    {
+        "id": "11",
+        "region": "Aisen"
+    },
+    {
+        "id": "12",
+        "region": "Magallanes"
+    }
+]

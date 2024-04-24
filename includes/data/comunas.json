@@ -1,0 +1,1382 @@
+[
+    {
+        "region": "1",
+        "comuna": "alto hospicio"
+    },
+    {
+        "region": "1",
+        "comuna": "huara"
+    },
+    {
+        "region": "1",
+        "comuna": "iquique"
+    },
+    {
+        "region": "1",
+        "comuna": "pica"
+    },
+    {
+        "region": "1",
+        "comuna": "pozo almonte"
+    },
+    {
+        "region": "2",
+        "comuna": "antofagasta"
+    },
+    {
+        "region": "2",
+        "comuna": "calama"
+    },
+    {
+        "region": "2",
+        "comuna": "maria elena"
+    },
+    {
+        "region": "2",
+        "comuna": "mejillones"
+    },
+    {
+        "region": "2",
+        "comuna": "ollagüe"
+    },
+    {
+        "region": "2",
+        "comuna": "san pedro de atacama"
+    },
+    {
+        "region": "2",
+        "comuna": "sierra gorda"
+    },
+    {
+        "region": "2",
+        "comuna": "taltal"
+    },
+    {
+        "region": "2",
+        "comuna": "tocopilla"
+    },
+    {
+        "region": "3",
+        "comuna": "alto del carmen"
+    },
+    {
+        "region": "3",
+        "comuna": "caldera"
+    },
+    {
+        "region": "3",
+        "comuna": "chañaral"
+    },
+    {
+        "region": "3",
+        "comuna": "copiapo "
+    },
+    {
+        "region": "3",
+        "comuna": "diego de almagro"
+    },
+    {
+        "region": "3",
+        "comuna": "freirina"
+    },
+    {
+        "region": "3",
+        "comuna": "huasco"
+    },
+    {
+        "region": "3",
+        "comuna": "tierra amarilla"
+    },
+    {
+        "region": "3",
+        "comuna": "vallenar"
+    },
+    {
+        "region": "4",
+        "comuna": "andacollo"
+    },
+    {
+        "region": "4",
+        "comuna": "canela"
+    },
+    {
+        "region": "4",
+        "comuna": "combarbala"
+    },
+    {
+        "region": "4",
+        "comuna": "coquimbo"
+    },
+    {
+        "region": "4",
+        "comuna": "illapel"
+    },
+    {
+        "region": "4",
+        "comuna": "la higuera"
+    },
+    {
+        "region": "4",
+        "comuna": "la serena"
+    },
+    {
+        "region": "4",
+        "comuna": "los vilos"
+    },
+    {
+        "region": "4",
+        "comuna": "monte patria"
+    },
+    {
+        "region": "4",
+        "comuna": "ovalle"
+    },
+    {
+        "region": "4",
+        "comuna": "paiguano"
+    },
+    {
+        "region": "4",
+        "comuna": "punitaqui"
+    },
+    {
+        "region": "4",
+        "comuna": "rio hurtado"
+    },
+    {
+        "region": "4",
+        "comuna": "salamanca"
+    },
+    {
+        "region": "4",
+        "comuna": "vicuña"
+    },
+    {
+        "region": "5",
+        "comuna": "algarrobo"
+    },
+    {
+        "region": "5",
+        "comuna": "cabildo"
+    },
+    {
+        "region": "5",
+        "comuna": "calle larga"
+    },
+    {
+        "region": "5",
+        "comuna": "cartagena"
+    },
+    {
+        "region": "5",
+        "comuna": "casablanca"
+    },
+    {
+        "region": "5",
+        "comuna": "catemu"
+    },
+    {
+        "region": "5",
+        "comuna": "concon"
+    },
+    {
+        "region": "5",
+        "comuna": "el quisco"
+    },
+    {
+        "region": "5",
+        "comuna": "el tabo"
+    },
+    {
+        "region": "5",
+        "comuna": "hijuelas"
+    },
+    {
+        "region": "5",
+        "comuna": "isla de pascua"
+    },
+    {
+        "region": "5",
+        "comuna": "juan fernandez"
+    },
+    {
+        "region": "5",
+        "comuna": "la calera"
+    },
+    {
+        "region": "5",
+        "comuna": "la cruz"
+    },
+    {
+        "region": "5",
+        "comuna": "la ligua"
+    },
+    {
+        "region": "5",
+        "comuna": "limache"
+    },
+    {
+        "region": "5",
+        "comuna": "llay llay"
+    },
+    {
+        "region": "5",
+        "comuna": "los andes "
+    },
+    {
+        "region": "5",
+        "comuna": "nogales"
+    },
+    {
+        "region": "5",
+        "comuna": "olmue"
+    },
+    {
+        "region": "5",
+        "comuna": "panquehue"
+    },
+    {
+        "region": "5",
+        "comuna": "papudo"
+    },
+    {
+        "region": "5",
+        "comuna": "petorca"
+    },
+    {
+        "region": "5",
+        "comuna": "puchuncavi"
+    },
+    {
+        "region": "5",
+        "comuna": "putaendo"
+    },
+    {
+        "region": "5",
+        "comuna": "quillota"
+    },
+    {
+        "region": "5",
+        "comuna": "quilpue"
+    },
+    {
+        "region": "5",
+        "comuna": "quintero"
+    },
+    {
+        "region": "5",
+        "comuna": "rinconada"
+    },
+    {
+        "region": "5",
+        "comuna": "san antonio"
+    },
+    {
+        "region": "5",
+        "comuna": "san esteban"
+    },
+    {
+        "region": "5",
+        "comuna": "san felipe"
+    },
+    {
+        "region": "5",
+        "comuna": "santa maria"
+    },
+    {
+        "region": "5",
+        "comuna": "santo domingo"
+    },
+    {
+        "region": "5",
+        "comuna": "valparaiso"
+    },
+    {
+        "region": "5",
+        "comuna": "villa alemana"
+    },
+    {
+        "region": "5",
+        "comuna": "viña del mar"
+    },
+    {
+        "region": "5",
+        "comuna": "zapallar"
+    },
+    {
+        "region": "6",
+        "comuna": "chepica"
+    },
+    {
+        "region": "6",
+        "comuna": "chimbarongo"
+    },
+    {
+        "region": "6",
+        "comuna": "codegua"
+    },
+    {
+        "region": "6",
+        "comuna": "coinco"
+    },
+    {
+        "region": "6",
+        "comuna": "coltauco"
+    },
+    {
+        "region": "6",
+        "comuna": "doñihue"
+    },
+    {
+        "region": "6",
+        "comuna": "graneros"
+    },
+    {
+        "region": "6",
+        "comuna": "la estrella"
+    },
+    {
+        "region": "6",
+        "comuna": "las cabras"
+    },
+    {
+        "region": "6",
+        "comuna": "litueche"
+    },
+    {
+        "region": "6",
+        "comuna": "lolol"
+    },
+    {
+        "region": "6",
+        "comuna": "machali"
+    },
+    {
+        "region": "6",
+        "comuna": "malloa"
+    },
+    {
+        "region": "6",
+        "comuna": "marchihue"
+    },
+    {
+        "region": "6",
+        "comuna": "mostazal"
+    },
+    {
+        "region": "6",
+        "comuna": "nancagua"
+    },
+    {
+        "region": "6",
+        "comuna": "navidad"
+    },
+    {
+        "region": "6",
+        "comuna": "olivar"
+    },
+    {
+        "region": "6",
+        "comuna": "palmilla"
+    },
+    {
+        "region": "6",
+        "comuna": "paredones"
+    },
+    {
+        "region": "6",
+        "comuna": "peralillo"
+    },
+    {
+        "region": "6",
+        "comuna": "peumo"
+    },
+    {
+        "region": "6",
+        "comuna": "pichidegua"
+    },
+    {
+        "region": "6",
+        "comuna": "pichilemu"
+    },
+    {
+        "region": "6",
+        "comuna": "placilla"
+    },
+    {
+        "region": "6",
+        "comuna": "pumanque"
+    },
+    {
+        "region": "6",
+        "comuna": "quinta de tilcoco"
+    },
+    {
+        "region": "6",
+        "comuna": "rancagua"
+    },
+    {
+        "region": "6",
+        "comuna": "rengo"
+    },
+    {
+        "region": "6",
+        "comuna": "requinoa"
+    },
+    {
+        "region": "6",
+        "comuna": "san fernando"
+    },
+    {
+        "region": "6",
+        "comuna": "san vicente de tagua tagua"
+    },
+    {
+        "region": "6",
+        "comuna": "santa cruz"
+    },
+    {
+        "region": "7",
+        "comuna": "cauquenes"
+    },
+    {
+        "region": "7",
+        "comuna": "chanco"
+    },
+    {
+        "region": "7",
+        "comuna": "colbun"
+    },
+    {
+        "region": "7",
+        "comuna": "constitucion"
+    },
+    {
+        "region": "7",
+        "comuna": "curepto"
+    },
+    {
+        "region": "7",
+        "comuna": "curico"
+    },
+    {
+        "region": "7",
+        "comuna": "empedrado"
+    },
+    {
+        "region": "7",
+        "comuna": "hualañe"
+    },
+    {
+        "region": "7",
+        "comuna": "licanten"
+    },
+    {
+        "region": "7",
+        "comuna": "linares"
+    },
+    {
+        "region": "7",
+        "comuna": "longavi"
+    },
+    {
+        "region": "7",
+        "comuna": "maule"
+    },
+    {
+        "region": "7",
+        "comuna": "molina"
+    },
+    {
+        "region": "7",
+        "comuna": "parral"
+    },
+    {
+        "region": "7",
+        "comuna": "pelarco"
+    },
+    {
+        "region": "7",
+        "comuna": "pelluhue"
+    },
+    {
+        "region": "7",
+        "comuna": "pencahue"
+    },
+    {
+        "region": "7",
+        "comuna": "rauco"
+    },
+    {
+        "region": "7",
+        "comuna": "retiro"
+    },
+    {
+        "region": "7",
+        "comuna": "rio claro"
+    },
+    {
+        "region": "7",
+        "comuna": "romeral"
+    },
+    {
+        "region": "7",
+        "comuna": "sagrada familia"
+    },
+    {
+        "region": "7",
+        "comuna": "san clemente "
+    },
+    {
+        "region": "7",
+        "comuna": "san javier"
+    },
+    {
+        "region": "7",
+        "comuna": "san rafael"
+    },
+    {
+        "region": "7",
+        "comuna": "talca"
+    },
+    {
+        "region": "7",
+        "comuna": "teno"
+    },
+    {
+        "region": "7",
+        "comuna": "vichuquen"
+    },
+    {
+        "region": "7",
+        "comuna": "villa alegre"
+    },
+    {
+        "region": "7",
+        "comuna": "yerbas buenas"
+    },
+    {
+        "region": "8",
+        "comuna": "alto biobio"
+    },
+    {
+        "region": "8",
+        "comuna": "antuco"
+    },
+    {
+        "region": "8",
+        "comuna": "arauco"
+    },
+    {
+        "region": "8",
+        "comuna": "cabrero"
+    },
+    {
+        "region": "8",
+        "comuna": "cañete"
+    },
+    {
+        "region": "8",
+        "comuna": "chiguayante"
+    },
+    {
+        "region": "8",
+        "comuna": "concepcion"
+    },
+    {
+        "region": "8",
+        "comuna": "contulmo"
+    },
+    {
+        "region": "8",
+        "comuna": "coronel"
+    },
+    {
+        "region": "8",
+        "comuna": "curanilahue"
+    },
+    {
+        "region": "8",
+        "comuna": "florida"
+    },
+    {
+        "region": "8",
+        "comuna": "hualpen"
+    },
+    {
+        "region": "8",
+        "comuna": "hualqui"
+    },
+    {
+        "region": "8",
+        "comuna": "laja"
+    },
+    {
+        "region": "8",
+        "comuna": "lebu"
+    },
+    {
+        "region": "8",
+        "comuna": "los alamos"
+    },
+    {
+        "region": "8",
+        "comuna": "los angeles"
+    },
+    {
+        "region": "8",
+        "comuna": "lota"
+    },
+    {
+        "region": "8",
+        "comuna": "mulchen"
+    },
+    {
+        "region": "8",
+        "comuna": "nacimiento"
+    },
+    {
+        "region": "8",
+        "comuna": "negrete"
+    },
+    {
+        "region": "8",
+        "comuna": "penco"
+    },
+    {
+        "region": "8",
+        "comuna": "quilaco"
+    },
+    {
+        "region": "8",
+        "comuna": "quilleco"
+    },
+    {
+        "region": "8",
+        "comuna": "san pedro de la paz"
+    },
+    {
+        "region": "8",
+        "comuna": "san rosendo"
+    },
+    {
+        "region": "8",
+        "comuna": "santa barbara"
+    },
+    {
+        "region": "8",
+        "comuna": "santa juana"
+    },
+    {
+        "region": "8",
+        "comuna": "talcahuano"
+    },
+    {
+        "region": "8",
+        "comuna": "tirua"
+    },
+    {
+        "region": "8",
+        "comuna": "tome"
+    },
+    {
+        "region": "8",
+        "comuna": "tucapel"
+    },
+    {
+        "region": "8",
+        "comuna": "yumbel"
+    },
+    {
+        "region": "9",
+        "comuna": "angol"
+    },
+    {
+        "region": "9",
+        "comuna": "carahue"
+    },
+    {
+        "region": "9",
+        "comuna": "cholchol"
+    },
+    {
+        "region": "9",
+        "comuna": "collipulli"
+    },
+    {
+        "region": "9",
+        "comuna": "cunco"
+    },
+    {
+        "region": "9",
+        "comuna": "curacautin"
+    },
+    {
+        "region": "9",
+        "comuna": "curarrehue"
+    },
+    {
+        "region": "9",
+        "comuna": "ercilla"
+    },
+    {
+        "region": "9",
+        "comuna": "freire"
+    },
+    {
+        "region": "9",
+        "comuna": "galvarino"
+    },
+    {
+        "region": "9",
+        "comuna": "gorbea"
+    },
+    {
+        "region": "9",
+        "comuna": "lautaro"
+    },
+    {
+        "region": "9",
+        "comuna": "loncoche"
+    },
+    {
+        "region": "9",
+        "comuna": "lonquimay"
+    },
+    {
+        "region": "9",
+        "comuna": "los sauces"
+    },
+    {
+        "region": "9",
+        "comuna": "lumaco"
+    },
+    {
+        "region": "9",
+        "comuna": "melipeuco"
+    },
+    {
+        "region": "9",
+        "comuna": "nueva imperial"
+    },
+    {
+        "region": "9",
+        "comuna": "padre las casas"
+    },
+    {
+        "region": "9",
+        "comuna": "perquenco"
+    },
+    {
+        "region": "9",
+        "comuna": "pitrufquen"
+    },
+    {
+        "region": "9",
+        "comuna": "pucon"
+    },
+    {
+        "region": "9",
+        "comuna": "puren"
+    },
+    {
+        "region": "9",
+        "comuna": "renaico"
+    },
+    {
+        "region": "9",
+        "comuna": "saavedra"
+    },
+    {
+        "region": "9",
+        "comuna": "temuco"
+    },
+    {
+        "region": "9",
+        "comuna": "teodoro schmidt"
+    },
+    {
+        "region": "9",
+        "comuna": "tolten"
+    },
+    {
+        "region": "9",
+        "comuna": "traiguen"
+    },
+    {
+        "region": "9",
+        "comuna": "victoria"
+    },
+    {
+        "region": "9",
+        "comuna": "vilcun"
+    },
+    {
+        "region": "9",
+        "comuna": "villarrica"
+    },
+    {
+        "region": "10",
+        "comuna": "ancud"
+    },
+    {
+        "region": "10",
+        "comuna": "calbuco"
+    },
+    {
+        "region": "10",
+        "comuna": "castro"
+    },
+    {
+        "region": "10",
+        "comuna": "chaiten"
+    },
+    {
+        "region": "10",
+        "comuna": "chonchi"
+    },
+    {
+        "region": "10",
+        "comuna": "cochamo"
+    },
+    {
+        "region": "10",
+        "comuna": "curaco de velez"
+    },
+    {
+        "region": "10",
+        "comuna": "dalcahue"
+    },
+    {
+        "region": "10",
+        "comuna": "fresia"
+    },
+    {
+        "region": "10",
+        "comuna": "frutillar"
+    },
+    {
+        "region": "10",
+        "comuna": "futaleufu"
+    },
+    {
+        "region": "10",
+        "comuna": "hualaihue"
+    },
+    {
+        "region": "10",
+        "comuna": "la union"
+    },
+    {
+        "region": "10",
+        "comuna": "lago ranco"
+    },
+    {
+        "region": "10",
+        "comuna": "llanquihue"
+    },
+    {
+        "region": "10",
+        "comuna": "los muermos"
+    },
+    {
+        "region": "10",
+        "comuna": "maullin"
+    },
+    {
+        "region": "10",
+        "comuna": "osorno"
+    },
+    {
+        "region": "10",
+        "comuna": "palena"
+    },
+    {
+        "region": "10",
+        "comuna": "puerto montt"
+    },
+    {
+        "region": "10",
+        "comuna": "puerto octay"
+    },
+    {
+        "region": "10",
+        "comuna": "puerto varas"
+    },
+    {
+        "region": "10",
+        "comuna": "puqueldon"
+    },
+    {
+        "region": "10",
+        "comuna": "purranque"
+    },
+    {
+        "region": "10",
+        "comuna": "puyehue"
+    },
+    {
+        "region": "10",
+        "comuna": "queilen"
+    },
+    {
+        "region": "10",
+        "comuna": "quellon"
+    },
+    {
+        "region": "10",
+        "comuna": "quemchi"
+    },
+    {
+        "region": "10",
+        "comuna": "quinchao"
+    },
+    {
+        "region": "10",
+        "comuna": "rio bueno"
+    },
+    {
+        "region": "10",
+        "comuna": "rio negro"
+    },
+    {
+        "region": "10",
+        "comuna": "san juan de la costa"
+    },
+    {
+        "region": "10",
+        "comuna": "san pablo"
+    },
+    {
+        "region": "11",
+        "comuna": "aysen"
+    },
+    {
+        "region": "11",
+        "comuna": "chile chico"
+    },
+    {
+        "region": "11",
+        "comuna": "cisnes"
+    },
+    {
+        "region": "11",
+        "comuna": "cochrane"
+    },
+    {
+        "region": "11",
+        "comuna": "coyhaique"
+    },
+    {
+        "region": "11",
+        "comuna": "guaitecas"
+    },
+    {
+        "region": "11",
+        "comuna": "lago verde"
+    },
+    {
+        "region": "11",
+        "comuna": "ohiggins"
+    },
+    {
+        "region": "11",
+        "comuna": "rio ibañez"
+    },
+    {
+        "region": "11",
+        "comuna": "tortel"
+    },
+    {
+        "region": "12",
+        "comuna": "cabo de hornos"
+    },
+    {
+        "region": "12",
+        "comuna": "laguna blanca"
+    },
+    {
+        "region": "12",
+        "comuna": "natales"
+    },
+    {
+        "region": "12",
+        "comuna": "porvenir"
+    },
+    {
+        "region": "12",
+        "comuna": "primavera"
+    },
+    {
+        "region": "12",
+        "comuna": "punta arenas"
+    },
+    {
+        "region": "12",
+        "comuna": "rio verde"
+    },
+    {
+        "region": "12",
+        "comuna": "san gregorio"
+    },
+    {
+        "region": "12",
+        "comuna": "timaukel"
+    },
+    {
+        "region": "12",
+        "comuna": "torres del paine "
+    },
+    {
+        "region": "13",
+        "comuna": "alhue"
+    },
+    {
+        "region": "13",
+        "comuna": "buin"
+    },
+    {
+        "region": "13",
+        "comuna": "calera de tango"
+    },
+    {
+        "region": "13",
+        "comuna": "cerrillos"
+    },
+    {
+        "region": "13",
+        "comuna": "cerro navia"
+    },
+    {
+        "region": "13",
+        "comuna": "Colina"
+    },
+    {
+        "region": "13",
+        "comuna": "Conchali"
+    },
+    {
+        "region": "13",
+        "comuna": "Curacavi"
+    },
+    {
+        "region": "13",
+        "comuna": "el bosque"
+    },
+    {
+        "region": "13",
+        "comuna": "el monte"
+    },
+    {
+        "region": "13",
+        "comuna": "estacion central"
+    },
+    {
+        "region": "13",
+        "comuna": "Huechuraba"
+    },
+    {
+        "region": "13",
+        "comuna": "independencia"
+    },
+    {
+        "region": "13",
+        "comuna": "isla de maipo"
+    },
+    {
+        "region": "13",
+        "comuna": "la cisterna"
+    },
+    {
+        "region": "13",
+        "comuna": "la florida"
+    },
+    {
+        "region": "13",
+        "comuna": "la granja"
+    },
+    {
+        "region": "13",
+        "comuna": "la Pintana"
+    },
+    {
+        "region": "13",
+        "comuna": "la reina"
+    },
+    {
+        "region": "13",
+        "comuna": "lampa"
+    },
+    {
+        "region": "13",
+        "comuna": "las condes"
+    },
+    {
+        "region": "13",
+        "comuna": "lo Barnechea"
+    },
+    {
+        "region": "13",
+        "comuna": "lo espejo"
+    },
+    {
+        "region": "13",
+        "comuna": "lo prado"
+    },
+    {
+        "region": "13",
+        "comuna": "Macul"
+    },
+    {
+        "region": "13",
+        "comuna": "Maipu"
+    },
+    {
+        "region": "13",
+        "comuna": "maria pinto"
+    },
+    {
+        "region": "13",
+        "comuna": "Melipilla"
+    },
+    {
+        "region": "13",
+        "comuna": "Ñuñoa"
+    },
+    {
+        "region": "13",
+        "comuna": "padre hurtado"
+    },
+    {
+        "region": "13",
+        "comuna": "Paine"
+    },
+    {
+        "region": "13",
+        "comuna": "pedro aguirre cerda"
+    },
+    {
+        "region": "13",
+        "comuna": "Peñaflor"
+    },
+    {
+        "region": "13",
+        "comuna": "Peñalolen"
+    },
+    {
+        "region": "13",
+        "comuna": "Pirque"
+    },
+    {
+        "region": "13",
+        "comuna": "providencia"
+    },
+    {
+        "region": "13",
+        "comuna": "pudahuel"
+    },
+    {
+        "region": "13",
+        "comuna": "puente alto "
+    },
+    {
+        "region": "13",
+        "comuna": "quilicura"
+    },
+    {
+        "region": "13",
+        "comuna": "quinta normal"
+    },
+    {
+        "region": "13",
+        "comuna": "recoleta"
+    },
+    {
+        "region": "13",
+        "comuna": "renca"
+    },
+    {
+        "region": "13",
+        "comuna": "san bernardo"
+    },
+    {
+        "region": "13",
+        "comuna": "san joaquin"
+    },
+    {
+        "region": "13",
+        "comuna": "san jose de maipo"
+    },
+    {
+        "region": "13",
+        "comuna": "san miguel"
+    },
+    {
+        "region": "13",
+        "comuna": "san pedro"
+    },
+    {
+        "region": "13",
+        "comuna": "san ramon"
+    },
+    {
+        "region": "13",
+        "comuna": "santiago"
+    },
+    {
+        "region": "13",
+        "comuna": "talagante"
+    },
+    {
+        "region": "13",
+        "comuna": "til til"
+    },
+    {
+        "region": "13",
+        "comuna": "vitacura"
+    },
+    {
+        "region": "14",
+        "comuna": "corral"
+    },
+    {
+        "region": "14",
+        "comuna": "futrono"
+    },
+    {
+        "region": "14",
+        "comuna": "lanco"
+    },
+    {
+        "region": "14",
+        "comuna": "los lagos"
+    },
+    {
+        "region": "14",
+        "comuna": "mafil"
+    },
+    {
+        "region": "14",
+        "comuna": "mariquina"
+    },
+    {
+        "region": "14",
+        "comuna": "paillaco"
+    },
+    {
+        "region": "14",
+        "comuna": "panguipulli"
+    },
+    {
+        "region": "14",
+        "comuna": "valdivia"
+    },
+    {
+        "region": "15",
+        "comuna": "arica"
+    },
+    {
+        "region": "15",
+        "comuna": "camarones"
+    },
+    {
+        "region": "15",
+        "comuna": "camiña"
+    },
+    {
+        "region": "15",
+        "comuna": "colchane"
+    },
+    {
+        "region": "15",
+        "comuna": "general lagos"
+    },
+    {
+        "region": "15",
+        "comuna": "putre"
+    },
+    {
+        "region": "16",
+        "comuna": "bulnes"
+    },
+    {
+        "region": "16",
+        "comuna": "chillan"
+    },
+    {
+        "region": "16",
+        "comuna": "chillan viejo"
+    },
+    {
+        "region": "16",
+        "comuna": "cobquecura"
+    },
+    {
+        "region": "16",
+        "comuna": "coelemu"
+    },
+    {
+        "region": "16",
+        "comuna": "coihueco"
+    },
+    {
+        "region": "16",
+        "comuna": "el carmen"
+    },
+    {
+        "region": "16",
+        "comuna": "ninhue"
+    },
+    {
+        "region": "16",
+        "comuna": "ñiquen"
+    },
+    {
+        "region": "16",
+        "comuna": "pemuco"
+    },
+    {
+        "region": "16",
+        "comuna": "pinto"
+    },
+    {
+        "region": "16",
+        "comuna": "portezuelo"
+    },
+    {
+        "region": "16",
+        "comuna": "quillon"
+    },
+    {
+        "region": "16",
+        "comuna": "quirihue"
+    },
+    {
+        "region": "16",
+        "comuna": "ranquil"
+    },
+    {
+        "region": "16",
+        "comuna": "san carlos"
+    },
+    {
+        "region": "16",
+        "comuna": "san fabian"
+    },
+    {
+        "region": "16",
+        "comuna": "san ignacio"
+    },
+    {
+        "region": "16",
+        "comuna": "san nicolas"
+    },
+    {
+        "region": "16",
+        "comuna": "trehuaco"
+    },
+    {
+        "region": "16",
+        "comuna": "yungay"
+    }
+]
