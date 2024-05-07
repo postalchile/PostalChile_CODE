@@ -274,8 +274,8 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
         }
 
         $response = $api->cotizar_envio([
-            'tipo_envio'        => 1,
-            'tipo_servicio'     => 2,
+            'tipo_envio'        => $settings->tipo_envio,
+            'tipo_servicio'     => $settings->tipo_servicio,
             'region_origen'     => $settings->remit_region,
             'comuna_origen'     => $settings->remit_comuna,
             'region_destino'    => $package['destination']['state'],
