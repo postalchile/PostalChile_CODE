@@ -299,10 +299,10 @@ class Postalchile_Public {
             'dest_comuna'           => $order->get_shipping_city(),
             'dest_fono'             => $order->get_billing_phone(), // Formatear: 9xxxxxxxx
             'dest_mail'             => $order->get_billing_email(),
-            'largo'                 => $lenght,
-            'ancho'                 => $width,
-            'alto'                  => $height,
-            'peso'                  => $weight,
+            'largo'                 => round($lenght,1),
+            'ancho'                 => round($width,1),
+            'alto'                  => round($height,1),
+            'peso'                  => round($weight,1),
             'contenido_descripcion' => implode(',', $desc),
             'contenido_valor'       => $order->get_total(),
             'cliente_codigo_barra'  => 'WC-'.$order_id,
@@ -324,6 +324,8 @@ class Postalchile_Public {
 			    $order->update_meta_data( 'postalchile_gestion_url_etiqueta1', $response_data->servicio->gestion_url_etiqueta1 );
 			    $order->update_meta_data( 'postalchile_gestion_url_etiqueta2', $response_data->servicio->gestion_url_etiqueta2 );
 			    $order->update_meta_data( 'postalchile_gestion_url_nomina', $response_data->servicio->gestion_url_nomina );
+
+			    $order->update_meta_data( 'postalchile_request', http_build_query($data,'',', ') );
 
 			    $order->save();
 
