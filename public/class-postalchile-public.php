@@ -281,8 +281,12 @@ class Postalchile_Public {
 
 			$weight += (float) $product->get_weight() * $item->get_quantity();
 			$lenght += (float) $product->get_length() * $item->get_quantity();
-			$width  += (float) $product->get_width() * $item->get_quantity();
-			$height += (float) $product->get_height() * $item->get_quantity();
+
+			//$width  += (float) $product->get_width() * $item->get_quantity();
+			//$height += (float) $product->get_height() * $item->get_quantity();
+
+			$width  += $width  ? 0 : (float) $product->get_width();
+			$height += $height ? 0 : (float) $product->get_height();
 		}
 
 		$weight = wc_get_weight( $weight, 'kg' );
