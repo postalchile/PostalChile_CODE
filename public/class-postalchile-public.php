@@ -268,25 +268,31 @@ class Postalchile_Public {
 			return;
 
 		$weight = 0;
-		$lenght = 0;
+		$length = 0;
 		$width  = 0;
 		$height = 0;
 		$desc 	= [];
 
+		$biggest_product 	= false;
+		$biggest_dimension 	= 0;
+
 		foreach ( $order->get_items() as $item_id => $item ) {
 
 			$product = $item->get_product();
+			$desc[]  = $item->get_name();
 
-			$desc[] = $item->get_name();
+			$dimensions = (float) $product->get_height() * $product->get_width() * $product->get_length();
+
+			if($dimensions > $biggest_dimension) {
+				$biggest_dimension 	= $dimensions;
+				$biggest_product  	= $product;
+
+				$height = $product->get_height();
+				$width 	= $product->get_width();
+				$length = $product->get_length();
+			}
 
 			$weight += (float) $product->get_weight() * $item->get_quantity();
-			$lenght += (float) $product->get_length() * $item->get_quantity();
-
-			//$width  += (float) $product->get_width() * $item->get_quantity();
-			//$height += (float) $product->get_height() * $item->get_quantity();
-
-			$width  += $width  ? 0 : (float) $product->get_width();
-			$height += $height ? 0 : (float) $product->get_height();
 		}
 
 		$weight = wc_get_weight( $weight, 'kg' );
@@ -297,13 +303,13 @@ class Postalchile_Public {
             'dest_apellidos'        => $order->get_shipping_last_name(),
             'dest_dir_calle'        => $order->get_shipping_address_1(),
             'dest_dir_numero'       => $order->get_shipping_address_2(),
-            'dest_dir_adicional'    => get_post_meta( $order_id, 'billing_address_3', true ), // Pendiente campo shipping_addres_3
+            'dest_dir_adicional'    => get_post_meta( $order_id, 'billing_address_3', true ),
             'dest_observaciones'    => $order->get_customer_note(),
             'dest_region'           => $order->get_shipping_state(),
             'dest_comuna'           => $order->get_shipping_city(),
             'dest_fono'             => $order->get_billing_phone(), // Formatear: 9xxxxxxxx
             'dest_mail'             => $order->get_billing_email(),
-            'largo'                 => round($lenght,1),
+            'largo'                 => round($length,1),
             'ancho'                 => round($width,1),
             'alto'                  => round($height,1),
             'peso'                  => round($weight,1),

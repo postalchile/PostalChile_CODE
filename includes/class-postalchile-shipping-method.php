@@ -267,10 +267,19 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
         $width  = 0;
         $height = 0;
 
+        $biggest_dimension  = 0;
+
         foreach($contents as $content) {
-            $length += floatval($content['data']->get_length());
-            $width  += floatval($content['data']->get_width());
-            $height += floatval($content['data']->get_height());
+
+          $dimensions = floatval($content['data']->get_height() * $content['data']->get_width() * $content['data']->get_length());
+
+            if($dimensions > $biggest_dimension) {
+                $biggest_dimension  = $dimensions;
+
+                $length = floatval($content['data']->get_length());
+                $width  = floatval($content['data']->get_width());
+                $height = floatval($content['data']->get_height());
+            }
         }
 
         $response = $api->cotizar_envio([
