@@ -161,8 +161,20 @@ class Postalchile_Public {
 			$errors->add( 'validation', 'El número de teléfono debe comenzar con 9 y contener 9 dígitos en total');
 		}
 
+		if( WC()->session->chosen_shipping_methods[0]=='postalchile-shipping-method' ) :
+
+			$api 		= new Postalchile_Shipping_Method();
+			$WC_Cart 	= new WC_Cart();
+			$package 	= $WC_Cart->get_shipping_packages();
+			$cost 		= $api->calculate_shipping_cost(isset($package[0]) ? $package[0] : false);
+
+			if(isset($cost->error) && $cost->error)
+				$errors->add( 'validation', "<span title='".$cost->label."'><b>Error en el envío con Postal Chile:</b> ".$cost->error."</span>");
+
+		endif;
+
 	}
- 	public function validate_rut($rut) {
+ 	static function validate_rut($rut) {
 
         // Verifica que no esté vacio y que el string sea de tamaño mayor a 3 carácteres(1-9)        
         if ((empty($rut)) || strlen($rut) < 3) {
@@ -234,13 +246,25 @@ class Postalchile_Public {
 		$options = get_option( 'woocommerce_postalchile-shipping-method_settings' );
 
         $defaults = [
+        	'title'				 	 => 'Envío con Postal Chile',
             'status_solicitar_envio' => false,
             'status_anular_envio'    => false,
             'tipo_envio'             => 1,
-            'tipo_servicio'          => 3
+            'tipo_servicio'          => 3,
+            'default_length'         => 1,
+            'default_width'          => 1,
+            'default_height'         => 1,
+            'default_weight'         => 1
         ];
 
         $settings = wp_parse_args($options,$defaults);
+
+        $required_fields = ['title','default_length','default_width','default_height','default_weight'];
+
+        foreach($required_fields as $field) {
+          if(!$settings[$field])
+            $settings[$field] = $defaults[$field];
+        }
 
         if(isset($settings['status_solicitar_envio']) && $settings['status_solicitar_envio'])
             $settings['status_solicitar_envio'] = str_replace('wc-','',$settings['status_solicitar_envio']);
@@ -250,7 +274,38 @@ class Postalchile_Public {
 
         return json_decode(json_encode($settings));
 	}
+
+    public function get_product_dimensions( $product ) {
+
+        $settings   = $this->get_settings();
+
+        $height     = floatval($product->get_height());
+        $width      = floatval($product->get_width());
+        $length     = floatval($product->get_length());
+
+        if(!$height && $settings->default_height)
+          $height = floatval($settings->default_height);
+
+        if(!$width && $settings->default_width)
+          $width  = floatval($settings->default_width);
+
+        if(!$length && $settings->default_length)
+          $length = floatval($settings->default_length);
+
+        $dimensions = (object)[
+          'total'   => floatval($height * $width * $length),
+          'height'  => $height,
+          'width'   => $width,
+          'length'  => $length
+        ];
+
+        return $dimensions;
+
+    }
+
 	public function solicitar_envio( $order_id ) {
+
+		$settings   = $this->get_settings();
 		
 		$order 		= is_numeric($order_id) ? wc_get_order( $order_id ) : $order_id;
 		$order_id 	= is_numeric($order_id) ? $order_id : $order->get_id();
@@ -281,18 +336,23 @@ class Postalchile_Public {
 			$product = $item->get_product();
 			$desc[]  = $item->get_name();
 
-			$dimensions = (float) $product->get_height() * $product->get_width() * $product->get_length();
+			$_dimensions = $this->get_product_dimensions($product);
+			$dimensions  = $_dimensions->total;
 
 			if($dimensions > $biggest_dimension) {
 				$biggest_dimension 	= $dimensions;
 				$biggest_product  	= $product;
 
-				$height = $product->get_height();
-				$width 	= $product->get_width();
-				$length = $product->get_length();
+				$length = $_dimensions->length;
+				$width  = $_dimensions->width;
+				$height = $_dimensions->height;
 			}
 
-			$weight += (float) $product->get_weight() * $item->get_quantity();
+			$product_weight = $product->get_weight();
+			$product_weight = $product_weight ? $product_weight : $settings->default_weight;
+
+			$weight += (float) $product_weight * $item->get_quantity();
+
 		}
 
 		$weight = wc_get_weight( $weight, 'kg' );

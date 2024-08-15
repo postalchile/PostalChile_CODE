@@ -6,7 +6,7 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
     public function __construct() {
 
         $this->id                   = 'postalchile-shipping-method';
-        $this->method_title         = esc_html__('Postal Chile', 'postalchile-woo-oficial' );
+        $this->method_title         = esc_html__('Envío con Postal Chile', 'postalchile-woo-oficial' );
         $this->method_description   = esc_html__('Envíos WooCommerce a Chile por Postal Chile', 'postalchile-woo-oficial' );
         $this->availability         = 'including';
         $this->countries            = ['CL'];
@@ -21,13 +21,14 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
 
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
     }
-    public function init_form_fields() {
+
+    public function get_form_fields() {
 
         $api = new Postalchile_API();
 
         $form_fields = array(
             'enabled' => array(
-              'title'   => esc_html__('Activar/Desactivar', 'postalchile-woo-oficial' ),
+              'title'   => esc_html__('Activar plugin', 'postalchile-woo-oficial' ),
               'type'    => 'checkbox',
               'label'   => esc_html__('Activa el método de envío Postal Chile', 'postalchile-woo-oficial'  ),
               'default' => 'no'
@@ -42,14 +43,16 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
               'label'   => esc_html__('Selecciona el ambiente de trabajo con Postal Chile', 'postalchile-woo-oficial'  ),
               'description' => esc_html__('Para realizar pruebas de uso active el ambiente de Pruebas', 'postalchile-woo-oficial'  ),
               'default' => 'qa',
-              'desc_tip'    => true,
+              'desc_tip'    => true
             ),
             'title' => array(
               'title'       => esc_html__('Título', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               'description' => esc_html__('Ingresa el título para el método de envío con Postal Chile', 'postalchile-woo-oficial'  ),
-              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'default'     => esc_html__('Envío con Postal Chile', 'postalchile-woo-oficial' ),
               'desc_tip'    => true,
+              'default'     => $this->method_title,
+              'placeholder' => $this->method_title
             ),
             'description' => array(
               'title'       => esc_html__('Descripción', 'postalchile-woo-oficial' ),
@@ -63,28 +66,32 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
               'type'        => 'text',
               'description' => esc_html__('Ingresa la API Key (api_key) proporcionada por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'api_secret' => array(
               'title'       => esc_html__('API Secret', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               'description' => esc_html__('Ingresa la contraseña (api_secret) proporcionada por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'client_id' => array(
               'title'       => esc_html__('ID Cliente', 'postalchile-woo-oficial' ),
               'type'        => 'number',
               'description' => esc_html__('Ingresa tu ID de cliente (client_id) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'usuario' => array(
               'title'       => esc_html__('Usuario', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'status_solicitar_envio' => array(
               'title'   => esc_html__('Estado para generación de OT automática', 'postalchile-woo-oficial' ),
@@ -134,35 +141,40 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
               'type'        => 'text',
               'description' => esc_html__('Ingresa tu rut o el de la empresa', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_nombres' => array(
               'title'       => esc_html__('Nombres remitente', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_apellidos' => array(
               'title'       => esc_html__('Apellidos remitente', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_dir_calle' => array(
               'title'       => esc_html__('Calle de la direccion para retiros', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_dir_numero' => array(
               'title'       => esc_html__('N° de la dirección para retiros', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_dir_adicional' => array(
               'title'       => esc_html__('N° de departamento, casa u oficina para retiro', 'postalchile-woo-oficial' ),
@@ -183,38 +195,86 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
               'type'        => 'select',
               'options'     => $api->regiones(),
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
-              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'default'     => esc_html__('metropolitana', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_comuna' => array(
               'title'       => esc_html__('Comuna', 'postalchile-woo-oficial' ),
               'type'        => 'select',
               'options'     => $api->comunas(),
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
-              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'default'     => esc_html__('quinta normal', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_fono' => array(
               'title'       => esc_html__('Teléfono de contacto', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
             ),
             'remit_mail' => array(
               'title'       => esc_html__('E-mail de contacto', 'postalchile-woo-oficial' ),
               'type'        => 'text',
               //'description' => esc_html__('Ingresa tu código de usuario (usuario) proporcionado por Postal Chile', 'postalchile-woo-oficial'  ),
               'default'     => esc_html__('', 'postalchile-woo-oficial' ),
-              'desc_tip'    => true
+              'desc_tip'    => true,
+              'required'    => true
+            ),
+            'default_length' => array(
+              'title'       => esc_html__('Longitud (predeterminada)', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define la longitud en centímetros (cm) predeterminada en caso de que los productos no tengan configurada su dimensión', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 1,
+              'default'     => 1
+            ),
+            'default_width' => array(
+              'title'       => esc_html__('Ancho (predeterminado)', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el ancho en centímetros (cm) predeterminado en caso de que los productos no tengan configurada su dimensión', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 1,
+              'default'     => 1
+            ),
+            'default_height' => array(
+              'title'       => esc_html__('Alto (predeterminado)', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el alto en centímetros (cm) predeterminado en caso de que los productos no tengan configurada su dimensión', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 1,
+              'default'     => 1
+            ),
+            'default_weight' => array(
+              'title'       => esc_html__('Peso (predeterminado)', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el peso en kilos (kg) predeterminado en caso de que los productos no tengan configurada su dimensión', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 1,
+              'default'     => 1
             )
         );
+        
+        return $form_fields;
 
-        $this->form_fields = $form_fields;
+    }
+    public function init_form_fields() {
+
+        //get_height() * $content['data']->get_width() * $content['data']->get_length
+
+        $this->form_fields = $this->get_form_fields();
     }
     public function get_settings( $name = false ) {
 
         $defaults = [
+            'title'                  => $this->method_title,
             'api_key'                => 'SGD',
             'api_secret'             => '5599b8449deab0b6c85be146d40a8a18',
             'client_id'              => 227,
@@ -224,11 +284,22 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
             'status_anular_envio'    => false,
             'tipo_envio'             => 1,
             'tipo_servicio'          => 3,
+            'default_length'         => 1,
+            'default_width'          => 1,
+            'default_height'         => 1,
+            'default_weight'         => 1
         ];
 
         if(!isset($this->settings['environment']) || $this->settings['environment']=='qa') {
             foreach($defaults as $key=>$value)
                 $this->settings[$key] = $value;
+        }
+
+        $required_fields = ['title','default_length','default_width','default_height','default_weight'];
+
+        foreach($required_fields as $field) {
+          if(!$this->settings[$field])
+            $this->settings[$field] = $defaults[$field];
         }
 
         if(!isset($this->settings['jwt_secret']))
@@ -249,12 +320,43 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
         if(!isset($settings->enabled) || $settings->enabled!=='yes')
             return;
 
+        $shipping_data = $this->calculate_shipping_cost($package);
+
         $this->add_rate( array(
             'id'     => $this->id,
-            'label'  => $this->settings['title'],
-            'cost'   => $this->calculate_shipping_cost($package)
+            'label'  => isset($shipping_data->label) && $shipping_data->label ? $shipping_data->label : $this->settings['title'],
+            'cost'   => $shipping_data->cost
         ));
     }
+
+    public function get_content_dimensions( $content ) {
+
+        $settings   = $this->get_settings();
+
+        $height     = floatval($content['data']->get_height());
+        $width      = floatval($content['data']->get_width());
+        $length     = floatval($content['data']->get_length());
+
+        if(!$height && $settings->default_height)
+          $height = floatval($settings->default_height);
+
+        if(!$width && $settings->default_width)
+          $width  = floatval($settings->default_width);
+
+        if(!$length && $settings->default_length)
+          $length = floatval($settings->default_length);
+
+        $dimensions = (object)[
+          'total'   => floatval($height * $width * $length),
+          'height'  => $height,
+          'width'   => $width,
+          'length'  => $length
+        ];
+
+        return $dimensions;
+
+    }
+
     public function calculate_shipping_cost( $package = array() ) {
 
         $settings   = $this->get_settings();
@@ -268,18 +370,24 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
         $height = 0;
 
         $biggest_dimension  = 0;
+        $_weight            = 0;
+        $weight             = WC()->cart->get_cart_contents_weight();
 
         foreach($contents as $content) {
 
-          $dimensions = floatval($content['data']->get_height() * $content['data']->get_width() * $content['data']->get_length());
+          $_dimensions = $this->get_content_dimensions($content);
+          $dimensions  = $_dimensions->total;
 
-            if($dimensions > $biggest_dimension) {
-                $biggest_dimension  = $dimensions;
+          if(!$weight)
+            $_weight += floatval($settings->default_weight);
 
-                $length = floatval($content['data']->get_length());
-                $width  = floatval($content['data']->get_width());
-                $height = floatval($content['data']->get_height());
-            }
+          if($dimensions > $biggest_dimension) {
+              $biggest_dimension  = $dimensions;
+
+              $length = $_dimensions->length;
+              $width  = $_dimensions->width;
+              $height = $_dimensions->height;
+          }
         }
 
         $response = $api->cotizar_envio([
@@ -292,15 +400,32 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
             'largo'             => $length,
             'ancho'             => $width,
             'alto'              => $height,
-            'peso'              => WC()->cart->get_cart_contents_weight()
+            'peso'              => $weight ? $weight : $_weight
         ]);
 
         if($response) {
 
             $response_data = json_decode($response);
 
-            if(isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0)
-                return $response_data->valor;
+            if(isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0) {
+
+              $return = (object)[
+                'cost' => $response_data->valor
+              ];
+
+            } else {
+
+              $error = current_user_can('manage_woocommerce') ? ' | Detalles del error: '.json_encode($response_data, JSON_PRETTY_PRINT) : false;
+
+              $return = (object)[
+                'label' => $this->settings['title'].' - '.$response_data->retorno->mensaje.$error,
+                'cost'  => $response_data->valor,
+                'error' => $response_data->retorno->mensaje
+              ];
+
+            }
+            
+            return $return;
 
         }
 
