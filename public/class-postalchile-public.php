@@ -54,6 +54,9 @@ class Postalchile_Public {
 		$this->plugin_name 	= $plugin_name;
 		$this->version 		= $version;
 	}
+	public function get_options() {
+		return get_option('postalchile_checkout',postalchile_default_checkout());
+	}
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'assets/js/postalchile.js', array( 'jquery' ), $this->version, false );
@@ -94,25 +97,27 @@ class Postalchile_Public {
 	}
 	public function checkout_fields_override( $fields ) {
 
-		unset($fields[self::BILLING_KEY]['billing_postcode']);
-		unset($fields[self::SHIPPING_KEY]['shipping_postcode']);
+		$options = $this->get_options();
+
+		//unset($fields[self::BILLING_KEY]['billing_postcode']);
+		//unset($fields[self::SHIPPING_KEY]['shipping_postcode']);
 		
 		$base_field =  array(
-			'label'     	=> __('Complemento', 'woocommerce'),
-			'placeholder'   => _x('N° Depto, Villa, Población, Sector, Etc', self::PLACEHOLDER_KEY, 'woocommerce'),
+			'label'     	=> $options['address_3']['label'],
+			'placeholder'   => $options['address_3']['placeholder'],
 			'required'  	=> false,
 			'class'     	=> array('form-row-wide'),
 			'clear'     	=> true,
-			'priority'  	=> 62
+			'priority'  	=> $options['address_3']['priority']
 		);
 		$fields[self::SHIPPING_KEY][self::SHIPPING_ADDRESS_3_KEY] = $base_field;
 		$fields[self::BILLING_KEY][self::BILLING_ADDRESS_3_KEY] = $base_field;
 		$fields[self::SHIPPING_KEY][self::SHIPPING_ADDRESS_3_KEY] = $base_field;
 		$fields[self::BILLING_KEY][self::BILLING_ADDRESS_3_KEY] = $base_field;
 
-		$fields['billing']['billing_company']['label'] = 'Rut';
-		$fields['billing']['billing_phone']['label'] = 'Teléfono celular';
-		$fields['billing']['billing_phone']['description'] = 'Debe comenzar con 9 y contener 9 dígitos (Ej: 9XXXXXXXX)';
+		$fields['billing']['billing_company']['label'] = $options['company']['label'];
+		$fields['billing']['billing_phone']['label'] = $options['phone']['label'];
+		$fields['billing']['billing_phone']['description'] = $options['phone']['description'];
 		
 		return $fields;
 	}
@@ -124,18 +129,22 @@ class Postalchile_Public {
 			update_post_meta( $order_id, self::SHIPPING_ADDRESS_3_KEY, sanitize_text_field( $_POST[self::SHIPPING_ADDRESS_3_KEY] ) );
 		}
 	}
+
 	public function reorder_fields($fields) {
 
-		$fields[self::ADDRESS_1_KEY][self::LABEL_KEY] = 'Dirección';
-		$fields[self::ADDRESS_1_KEY][self::PLACEHOLDER_KEY] = 'Nombre de la calle';
+		$options = $this->get_options();
+
+		$fields[self::ADDRESS_1_KEY][self::LABEL_KEY] = $options['address_1']['label'];
+		$fields[self::ADDRESS_1_KEY][self::PLACEHOLDER_KEY] = $options['address_1']['placeholder'];
 		$fields[self::ADDRESS_1_KEY][self::REQUIRED_KEY] = true;
-		$fields[self::ADDRESS_2_KEY][self::LABEL_KEY] = 'N&uacute;mero';
-		$fields[self::ADDRESS_2_KEY][self::PLACEHOLDER_KEY] = 'Número';
+		$fields[self::ADDRESS_2_KEY][self::LABEL_KEY] = $options['address_2']['label'];
+		$fields[self::ADDRESS_2_KEY][self::PLACEHOLDER_KEY] = $options['address_2']['placeholder'];
 		$fields[self::ADDRESS_2_KEY][self::REQUIRED_KEY] = true;
-		$fields['city'][self::LABEL_KEY] = 'Comuna';
-		$fields['state'][self::PRIORITY_KEY] = 42;
-		$fields['city'][self::PRIORITY_KEY] = 43;
-		$fields['email'][self::PRIORITY_KEY] = 22;
+		$fields['state'][self::LABEL_KEY] = $options['state']['label'];
+		$fields['city'][self::LABEL_KEY] = $options['city']['label'];
+		$fields['state'][self::PRIORITY_KEY] = $options['state']['priority'];
+		$fields['city'][self::PRIORITY_KEY] = $options['city']['priority'];
+		//$fields['email'][self::PRIORITY_KEY] = 22;
 		return $fields;
 	}
 	public function override_postcode_validation( $address_fields ) {	

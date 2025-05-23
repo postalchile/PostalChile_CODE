@@ -60,6 +60,67 @@ if (stripos(implode($all_plugins), 'woocommerce.php')) {
 	}
 
 	add_filter( 'woocommerce_shipping_methods', 'postalchile_add_shipping_method' );
+
+	function postalchile_checkout_save() {
+		if (!wp_verify_nonce($_POST['postalchile_nonce'], 'postalchile_checkout_nonce')) {
+		    die('¡Acceso no autorizado!');
+		}
+		update_option('postalchile_checkout',$_POST['postalchile_checkout'],false);
+	    wp_redirect(admin_url('admin.php?page=postal-chile&tab=checkout'));
+	    die();
+	}
+
+	add_action( 'admin_post_postalchile_checkout', 'postalchile_checkout_save' );
+
+	function postalchile_default_checkout() {
+		$fields = [
+		    'state' => [
+	            'label'         => 'Región',
+	            //'placeholder'   => 'Seleccione una región',
+	            'priority'      => '42'
+		    ],
+		    'city' => [
+	            'label'         => 'Comuna',
+	            //'placeholder'   => 'Seleccione una región',
+	            'priority'      => '43'
+		    ],
+	        'address_1' => [
+	            'label'         => 'Dirección',
+	            'placeholder'   => 'Nombre de la calle',
+	            //'priority'      => '42'
+		    ],
+	        'address_2' => [
+	            'label'         => 'Número',
+	            'placeholder'   => 'Número',
+	            //'priority'      => '42'
+		    ],
+	        'address_3' => [
+	            'label'         => 'Complemento',
+	            'placeholder'   => 'N° Depto, Villa, Población, Sector, Etc',
+	            'priority'      => '62'
+		    ],
+	        'company' => [
+	            'label'         => 'Rut',
+	            //'placeholder'   => 'Ingresa tu rut'
+	            //'priority'      => '42'
+		    ],
+	        'phone' => [
+	            'label'         => 'Teléfono celular',
+	            'description'	=> 'Debe comenzar con 9 y contener 9 dígitos (Ej: 9XXXXXXXX)'
+	            //'placeholder'   => 'N° Depto, Villa, Población, Sector, Etc',
+	            //'priority'      => '42'
+		    ],
+		    /*
+	        'field' => [
+	            'label'         => 'Región',
+	            'placeholder'   => 'N° Depto, Villa, Población, Sector, Etc',
+	            'priority'      => '42'
+		    ]
+		    */
+		];
+
+		return $fields;
+	}
 }
 
 function run_postalchile() {
