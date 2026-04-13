@@ -154,8 +154,9 @@ if ( ! class_exists( 'Postalchile_API' ) ) {
                 if(isset($servicio[$key]) && !$servicio[$key])
                     $servicio[$key] = $value;
             }
-
-            $args       = $this->set_api_json_request( 'solicitar_envio', $servicio, 'detalle_servicio');
+            
+            $endpoint   = isset($servicio['numero_bultos']) ? 'v2/solicitar_envio' : 'solicitar_envio';
+            $args       = $this->set_api_json_request( $endpoint, $servicio, 'detalle_servicio');
             $response   = $this->api($args);
             //return $this->debug($args,$response);
 

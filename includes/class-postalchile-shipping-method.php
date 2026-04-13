@@ -259,7 +259,52 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
               'desc_tip'    => true,
               'placeholder' => 1,
               'default'     => 1
-            )
+            ),
+            'standar_height' => array(
+              'title'       => esc_html__('Caja estándar - Alto', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el alto en centímetros (cm) de una caja estándar', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 50,
+              'default'     => 50
+            ),
+            'standar_width' => array(
+              'title'       => esc_html__('Caja estándar - Ancho', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el ancho en centímetros (cm) de una caja estándar', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 40,
+              'default'     => 40
+            ),
+            'standar_length' => array(
+              'title'       => esc_html__('Caja estándar - Longitud', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define la longitud en centímetros (cm) de una caja estándar', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 20,
+              'default'     => 20
+            ),
+            'max_weight' => array(
+              'title'       => esc_html__('Peso máximo legar a transportar (KG)', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el peso máximo legal a transportar', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 25,
+              'default'     => 25
+            ),
+            'margin' => array(
+              'title'       => esc_html__('Margen de tolerancia en el cálculo (%)', 'postalchile-woo-oficial' ),
+              'type'        => 'number',
+              'description' => esc_html__('Define el margen de tolerancia en el cálculo de bultos', 'postalchile-woo-oficial'  ),
+              'default'     => esc_html__('', 'postalchile-woo-oficial' ),
+              'desc_tip'    => true,
+              'placeholder' => 10,
+              'default'     => 10
+            ),
         );
         
         return $form_fields;
@@ -336,6 +381,8 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
         $height     = floatval($content['data']->get_height());
         $width      = floatval($content['data']->get_width());
         $length     = floatval($content['data']->get_length());
+        $weight     = floatval($content['data']->get_weight());
+        $quantity   = floatval($content['quantity']);
 
         if(!$height && $settings->default_height)
           $height = floatval($settings->default_height);
@@ -346,18 +393,38 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
         if(!$length && $settings->default_length)
           $length = floatval($settings->default_length);
 
+        if(!$weight && $settings->default_weight)
+          $weight = floatval($settings->default_weight);
+
+        $total          = floatval($height * $width * $length);
+        $margin         = floatval($settings->margin / 100);
+        $total_weight   = $quantity*$weight;
+        $total_lt       = $quantity*($total/1000);
+
+
         $dimensions = (object)[
-          'total'   => floatval($height * $width * $length),
-          'height'  => $height,
-          'width'   => $width,
-          'length'  => $length
+          'total'               => $total,
+          'quantity'            => $quantity,
+          'height'              => $height,
+          'width'               => $width,
+          'length'              => $length,
+          'weight'              => $weight,
+          'weight_volume'       => $total/4000,
+          'cm3'                 => $total,
+          'lt'                  => $total/1000,
+          'total_weight_volume' => $quantity*($total/4000),
+          'total_weight'        => $total_weight,
+          'total_lt'            => $total_lt,
+          'margin'              => $margin,
+          'final_weight'        => $total_weight+($total_weight*$margin),
+          'final_lt'            => $total_lt+($total_lt*$margin)
         ];
 
         return $dimensions;
 
     }
 
-    public function calculate_shipping_cost( $package = array() ) {
+    public function calculate_shipping_cost_old( $package = array() ) {
 
         $settings   = $this->get_settings();
 
@@ -420,6 +487,116 @@ class Postalchile_Shipping_Method extends WC_Shipping_Method {
               $return = (object)[
                 'label' => $this->settings['title'].' - '.$response_data->retorno->mensaje.$error,
                 'cost'  => $response_data->valor,
+                'error' => $response_data->retorno->mensaje
+              ];
+
+            }
+            
+            return $return;
+
+        }
+    }
+
+    public function calculate_shipping_cost( $package = array() ) {
+
+        $settings   = $this->get_settings();
+
+        $api        = new Postalchile_API();
+
+        $contents =  WC()->cart->get_cart_contents();
+
+        $extra_data = false;
+
+        $length = 0;
+        $width  = 0;
+        $height = 0;
+
+        $biggest_dimension  = 0;
+        $_weight            = 0;
+        $weight             = WC()->cart->get_cart_contents_weight();
+        $standar_cm3        = $settings->standar_height*$settings->standar_width*$settings->standar_length;
+
+        $totals = [
+          'weight'      => 0,
+          'lt'          => 0,
+          'standar_cm3' => $standar_cm3,
+          'standar_lt'  => $standar_cm3/1000,
+          'max_weight'  => $settings->max_weight
+        ];
+
+        foreach($contents as $index=>$content) {
+
+            $_dimensions    = $this->get_content_dimensions($content);
+            $dimensions     = $_dimensions->total;
+
+            $totals['weight']   += $_dimensions->final_weight;
+            $totals['lt']       += $_dimensions->final_lt;
+
+            if(!$weight)
+                $_weight += floatval($settings->default_weight);
+
+            if($dimensions > $biggest_dimension) {
+                $biggest_dimension  = $dimensions;
+                $length = $_dimensions->length;
+                $width  = $_dimensions->width;
+                $height = $_dimensions->height;
+            }
+        }
+
+        $weight     = $weight ? $weight : $_weight;
+        $box_volume = ceil($totals['lt']/$totals['standar_lt']);
+        $box_weight = ceil($totals['weight']/$settings->max_weight);
+        $boxes_unit = $box_volume > $box_weight ? 'Lt.' : 'Kg.';
+        $boxes_qty  = $box_volume > $box_weight ? $totals['standar_lt'] : ($weight > $settings->max_weight ? $settings->max_weight : $weight);
+
+        $totals['box_volume'] = $box_volume;
+        $totals['box_weight'] = $box_weight;
+        $totals['boxes']      = max($box_volume, $box_weight);
+        $totals['boxes_unit'] = $boxes_unit;
+        $totals['boxes_qty']  = $boxes_qty;
+
+        $single_box  = $totals['boxes'] > 1 ? true : false;
+        $extra_data  = $totals['boxes'].' '.($single_box ? 'bultos' : 'bulto').' de '.$totals['boxes_qty'].' '.$totals['boxes_unit'];
+        $total_price = true;
+
+        if(!$total_price)
+          $extra_data .= $single_box ? ' - Precio por bulto' : false;
+
+        $response_args = [
+            'tipo_envio'        => $settings->tipo_envio,
+            'tipo_servicio'     => $settings->tipo_servicio,
+            'region_origen'     => $settings->remit_region,
+            'comuna_origen'     => $settings->remit_comuna,
+            'region_destino'    => $package['destination']['state'],
+            'comuna_destino'    => $package['destination']['city'],
+            'largo'             => $single_box ? $settings->standar_length : $length,
+            'ancho'             => $single_box ? $settings->standar_width : $width,
+            'alto'              => $single_box ? $settings->standar_height : $height,
+            'peso'              => $single_box ? ($weight/$totals['boxes']) : $weight
+        ];
+
+        $response = $api->cotizar_envio($response_args);
+
+        if($response) {
+
+            $response_data = json_decode($response);
+
+            $cost = isset($response_data->valor) ? ($total_price ? $response_data->valor*$totals['boxes'] : $response_data->valor) : false;
+
+            if(isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0) {
+
+              $return = (object)[
+                'label' => $this->settings['title'].': '.$extra_data,
+                'cost'  => $cost
+              ];
+
+            } else {
+
+              $error = current_user_can('manage_woocommerce') ? ' | Detalles del error: '.json_encode($response_data, JSON_PRETTY_PRINT) : false;
+
+              $return = (object)[
+                'label' => $this->settings['title'].': '.$extra_data.' - '.$response_data->retorno->mensaje.$error,
+                'cost'  => $cost,
                 'error' => $response_data->retorno->mensaje
               ];
 

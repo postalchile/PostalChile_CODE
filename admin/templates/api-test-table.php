@@ -32,8 +32,19 @@ if ( ! defined( 'WPINC' ) )
                 
                         foreach($data->content as $key=>$value) {
                             if(is_object($value)) {
-                                foreach($value as $skey=>$svalue)
-                                    echo '<tr align="left"><th><b>'.$skey.':</b></th><td align="left">'.$svalue.'</td></tr>';
+                                foreach($value as $skey=>$svalue) {
+                                    if(is_array($svalue)) :
+                                        echo '<tr align="left"><th><b>'.$skey.':</b></th><td align="left"><table class="table-sm"><tbody>';
+                                        foreach($svalue as $svkey=>$svvalue) {
+                                            echo '<tr align="left"><th><b>'.$svkey.':</b></th><td align="left">'.$svvalue.'</td></tr>';
+                                        }
+                                        echo '</tbody></table></td></tr>';
+                                    else :
+                                        echo '<tr align="left"><th><b>'.$skey.':</b></th><td align="left">'.$svalue.'</td></tr>';
+
+                                    endif;
+
+                                }
                             } else {
 
                                 if($key=='request') {

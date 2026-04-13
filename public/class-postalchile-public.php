@@ -284,13 +284,15 @@ class Postalchile_Public {
         return json_decode(json_encode($settings));
 	}
 
-    public function get_product_dimensions( $product ) {
+    public function get_product_dimensions( $product,$item=false ) {
 
         $settings   = $this->get_settings();
 
         $height     = floatval($product->get_height());
         $width      = floatval($product->get_width());
         $length     = floatval($product->get_length());
+        $weight     = floatval($product->get_weight());
+        $quantity   = floatval($item->get_quantity());
 
         if(!$height && $settings->default_height)
           $height = floatval($settings->default_height);
@@ -301,11 +303,30 @@ class Postalchile_Public {
         if(!$length && $settings->default_length)
           $length = floatval($settings->default_length);
 
+        if(!$weight && $settings->default_weight)
+          $weight = floatval($settings->default_weight);
+
+        $total          = floatval($height * $width * $length);
+        $margin         = floatval($settings->margin / 100);
+        $total_weight   = $quantity*$weight;
+        $total_lt       = $quantity*($total/1000);
+
         $dimensions = (object)[
-          'total'   => floatval($height * $width * $length),
-          'height'  => $height,
-          'width'   => $width,
-          'length'  => $length
+          'total'               => $total,
+          'quantity'            => $quantity,
+          'height'              => $height,
+          'width'               => $width,
+          'length'              => $length,
+          'weight'              => $weight,
+          'weight_volume'       => $total/4000,
+          'cm3'                 => $total,
+          'lt'                  => $total/1000,
+          'total_weight_volume' => $quantity*($total/4000),
+          'total_weight'        => $total_weight,
+          'total_lt'            => $total_lt,
+          'margin'              => $margin,
+          'final_weight'        => $total_weight+($total_weight*$margin),
+          'final_lt'            => $total_lt+($total_lt*$margin)
         ];
 
         return $dimensions;
@@ -339,23 +360,39 @@ class Postalchile_Public {
 
 		$biggest_product 	= false;
 		$biggest_dimension 	= 0;
+        $standar_cm3        = $settings->standar_height*$settings->standar_width*$settings->standar_length;
+
+        $totals = [
+          'weight'      => 0,
+          'lt'          => 0,
+          'standar_cm3' => $standar_cm3,
+          'standar_lt'  => $standar_cm3/1000,
+          'max_weight'  => $settings->max_weight
+        ];
 
 		foreach ( $order->get_items() as $item_id => $item ) {
 
 			$product = $item->get_product();
 			$desc[]  = $item->get_name();
 
-			$_dimensions = $this->get_product_dimensions($product);
-			$dimensions  = $_dimensions->total;
 
-			if($dimensions > $biggest_dimension) {
+			$_dimensions 	= $this->get_product_dimensions($product,$item);
+			$dimensions  	= $_dimensions->total;
+
+            $totals['weight']   += $_dimensions->final_weight;
+            $totals['lt']       += $_dimensions->final_lt;
+
+            if(!$weight)
+                $_weight += floatval($settings->default_weight);
+
+            if($dimensions > $biggest_dimension) {
 				$biggest_dimension 	= $dimensions;
 				$biggest_product  	= $product;
 
 				$length = $_dimensions->length;
 				$width  = $_dimensions->width;
 				$height = $_dimensions->height;
-			}
+            }
 
 			$product_weight = $product->get_weight();
 			$product_weight = $product_weight ? $product_weight : $settings->default_weight;
@@ -364,7 +401,25 @@ class Postalchile_Public {
 
 		}
 
-		$weight = wc_get_weight( $weight, 'kg' );
+		$weight 	= wc_get_weight( $weight, 'kg' );
+
+        $box_volume = ceil($totals['lt']/$totals['standar_lt']);
+        $box_weight = ceil($totals['weight']/$settings->max_weight);
+        $boxes_unit = $box_volume > $box_weight ? 'Lt.' : 'Kg.';
+        $boxes_qty  = $box_volume > $box_weight ? $totals['standar_lt'] : ($weight > $settings->max_weight ? $settings->max_weight : $weight);
+
+        $totals['box_volume'] = $box_volume;
+        $totals['box_weight'] = $box_weight;
+        $totals['boxes']      = max($box_volume, $box_weight);
+        $totals['boxes_unit'] = $boxes_unit;
+        $totals['boxes_qty']  = $boxes_qty;
+
+        $single_box  = $totals['boxes'] > 1 ? true : false;
+        $extra_data  = $totals['boxes'].' '.($single_box ? 'bultos' : 'bulto').' de '.$totals['boxes_qty'].' '.$totals['boxes_unit'];
+        $total_price = true;
+
+        if(!$total_price)
+          $extra_data .= $single_box ? ' - Precio por bulto' : false;
 
 		$data = [
             'dest_rut'              => $order->get_shipping_company(), // Formatear rut
@@ -378,15 +433,19 @@ class Postalchile_Public {
             'dest_comuna'           => $order->get_shipping_city(),
             'dest_fono'             => $order->get_billing_phone(), // Formatear: 9xxxxxxxx
             'dest_mail'             => $order->get_billing_email(),
-            'largo'                 => round($length,1),
-            'ancho'                 => round($width,1),
-            'alto'                  => round($height,1),
-            'peso'                  => round($weight,1),
+            'largo'             	=> round($single_box ? $settings->standar_length : $length,1),
+            'ancho'             	=> round($single_box ? $settings->standar_width : $width,1),
+            'alto'              	=> round($single_box ? $settings->standar_height : $height,1),
+            'peso'              	=> round($single_box ? ($weight/$totals['boxes']) : $weight,1),
             'contenido_descripcion' => implode(',', $desc),
             'contenido_valor'       => $order->get_total(),
             'cliente_codigo_barra'  => 'WC-'.$order_id,
             'cliente_orden_compra'  => $order_id,
         ];
+
+        // MULTIBULTOS
+        if($single_box)
+        	$data['numero_bultos'] = $totals['boxes'];
 
         $response = $api->solicitar_envio( $data );
 
@@ -394,15 +453,29 @@ class Postalchile_Public {
 
         	$response_data = json_decode($response);
 
-        	if($response_data->retorno->codigo==0 && $response_data->servicio->codigo_seguimiento) {
+        	if($response_data->retorno->codigo==0 && (
+        		isset($response_data->servicio->codigo_seguimiento) || isset($response_data->servicio->codigos_seguimiento)
+        	)) {
 
-        		$order->add_order_note( 'El N° de seguimiento de tu envío es '.$response_data->servicio->codigo_seguimiento, 1 );
+        		if(isset($response_data->servicio->codigo_seguimiento) && $response_data->servicio->codigo_seguimiento) :
+        			$order->add_order_note( 'El N° de seguimiento de tu envío es '.$response_data->servicio->codigo_seguimiento, 1 );
+			    	$order->update_meta_data( 'postalchile_codigo_seguimiento', $response_data->servicio->codigo_seguimiento );
+        		endif;
 
-			    $order->update_meta_data( 'postalchile_codigo_seguimiento', $response_data->servicio->codigo_seguimiento );
+        		if(isset($response_data->servicio->codigos_seguimiento) && $response_data->servicio->codigos_seguimiento) :
+        			$numbers = [];
+        			foreach($response_data->servicio->codigos_seguimiento as $index=>$codigo_seguimiento) {
+        				$numbers[] = $codigo_seguimiento.' ('.($index+1).' de '.$totals['boxes'].')';
+        			}
+        			$order->add_order_note( 'Los N° de seguimiento de tu envío son:<br>'.implode('<br>', $numbers), 1 );
+			    	$order->update_meta_data( 'postalchile_codigo_seguimiento', $response_data->servicio->codigos_seguimiento );
+        		endif;
+
 			    $order->update_meta_data( 'postalchile_valor', $response_data->servicio->valor );
 			    $order->update_meta_data( 'postalchile_gestion_url_etiqueta1', $response_data->servicio->gestion_url_etiqueta1 );
 			    $order->update_meta_data( 'postalchile_gestion_url_etiqueta2', $response_data->servicio->gestion_url_etiqueta2 );
 			    $order->update_meta_data( 'postalchile_gestion_url_nomina', $response_data->servicio->gestion_url_nomina );
+			    $order->update_meta_data( 'postalchile_cantidad_bultos', $extra_data );
 
 			    $order->update_meta_data( 'postalchile_request', http_build_query($data,'',', ') );
 
@@ -429,32 +502,43 @@ class Postalchile_Public {
 		if(!$codigo_seguimiento)
 			return;
 
-        $response = $api->anular_envio( ['codigo_seguimiento'=>$codigo_seguimiento] );
+		if(is_array($codigo_seguimiento)) :
+			$codes = $codigo_seguimiento;
+		else :
+			$codes = [$codigo_seguimiento];
+		endif;
 
-        if($response) {
+		foreach($codes as $codigo_seguimiento) :
 
-        	$response_data = json_decode($response);
+	        $response = $api->anular_envio( ['codigo_seguimiento'=>$codigo_seguimiento] );
 
-        	if($response_data->retorno->codigo==0 && $response_data->retorno->mensaje) {
+	        if($response) {
 
-        		$order->add_order_note( 'Tu envío N° '.$codigo_seguimiento.' ha sido anulado', 1 );
+	        	$response_data = json_decode($response);
 
-			    $order->update_meta_data( 'postalchile_codigo_seguimiento', false );
-			    $order->update_meta_data( 'postalchile_valor', false );
-			    $order->update_meta_data( 'postalchile_gestion_url_etiqueta1', false );
-			    $order->update_meta_data( 'postalchile_gestion_url_etiqueta2', false );
-			    $order->update_meta_data( 'postalchile_gestion_url_nomina', false );
+	        	if($response_data->retorno->codigo==0 && $response_data->retorno->mensaje) {
 
-			    $order->save();
+	        		$order->add_order_note( 'Tu envío N° '.$codigo_seguimiento.' ha sido anulado', 1 );
 
-        	} else {
-        		$order->add_order_note( 'Error al anular el envío: '.$response_data->retorno->mensaje );
-        	}
+				    $order->update_meta_data( 'postalchile_codigo_seguimiento', false );
+				    $order->update_meta_data( 'postalchile_valor', false );
+				    $order->update_meta_data( 'postalchile_gestion_url_etiqueta1', false );
+				    $order->update_meta_data( 'postalchile_gestion_url_etiqueta2', false );
+				    $order->update_meta_data( 'postalchile_gestion_url_nomina', false );
+				    $order->update_meta_data( 'postalchile_cantidad_bultos', false );
 
-        } else {
-        	// For debug only
-        	// $order->add_order_note( $response );
-        }
+				    $order->save();
+
+	        	} else {
+	        		$order->add_order_note( 'Error al anular el envío: '.$response_data->retorno->mensaje );
+	        	}
+
+	        } else {
+	        	// For debug only
+	        	// $order->add_order_note( $response );
+	        }
+		endforeach;
+
 	}
 	public function tracking_envio( $order_id ) {
 
@@ -468,31 +552,47 @@ class Postalchile_Public {
 		if(!$codigo_seguimiento)
 			return;
 
-        $response = $api->tracking_envio( [
-            'codigo_seguimiento'    => $codigo_seguimiento,
-            //'cliente_codigo_barra'  => $codigo_seguimiento
-        ] );
+		if(is_array($codigo_seguimiento)) :
+			$codes = $codigo_seguimiento;
+		else :
+			$codes = [$codigo_seguimiento];
+		endif;
 
-        $status = 'En preparación';
+		$text=[];
 
-        if($response) {
+		foreach($codes as $index=>$codigo_seguimiento) :
 
-        	$response_data  = json_decode($response);
-			
-        	if(isset($response_data->estado_actual->gestion_actual) && $response_data->estado_actual->gestion_actual) {
+	        $response = $api->tracking_envio( [
+	            'codigo_seguimiento'    => $codigo_seguimiento,
+	            //'cliente_codigo_barra'  => $codigo_seguimiento
+	        ] );
 
-        		$status = $response_data->estado_actual->gestion_actual;
+	        $status = 'En preparación';
 
-        	} else {
+	        if($response) {
 
-        	}
+	        	$response_data  = json_decode($response);
+				
+	        	if(isset($response_data->estado_actual->gestion_actual) && $response_data->estado_actual->gestion_actual) {
 
-        } else {
-        	// For debug only
-        	// $order->add_order_note( $response );
-        }
+	        		$status = $response_data->estado_actual->gestion_actual;
 
-        echo '<div class="wc-block-order-confirmation-order-note">Enviado por Postal Chile<ul><li>Estado del envío: <b>'.$status.'</b></li><li>Código de seguimiento: <b>'.$codigo_seguimiento.'</b></li></ul><p>Puedes confirmar el estado del pedido ingresando a <a href="https://www.postalchile.cl/tra_index.htm#" target="_blank">https://www.postalchile.cl/tra_index.htm#</a></div>';
+	        	} else {
+
+	        	}
+
+	        } else {
+	        	// For debug only
+	        	// $order->add_order_note( $response );
+	        }
+
+	        $text[] = '<li>Código de seguimiento ('.($index+1).' de '.count($codes).'): <b>'.$codigo_seguimiento.'</b> - Estado: '.$status.'</li>';
+
+	    endforeach;
+
+	    echo '<div class="wc-block-order-confirmation-order-note">Enviado por Postal Chile<ul>'.implode('', $text).'</ul><p>Puedes confirmar el estado del pedido ingresando a <a href="https://www.postalchile.cl/tra_index.htm#" target="_blank">https://www.postalchile.cl/tra_index.htm#</a></div>';
+
+
 	}
 	public function woocommerce_order_actions( $actions ){
 
@@ -520,38 +620,51 @@ class Postalchile_Public {
 
 				$api = new Postalchile_API();
 
-		        $response = $api->tracking_envio( [
-		            'codigo_seguimiento'    => $codigo_seguimiento,
-		            //'cliente_codigo_barra'  => $codigo_seguimiento
-		        ] );
+				if(is_array($codigo_seguimiento)) :
+					$codes = $codigo_seguimiento;
+				else :
+					$codes = [$codigo_seguimiento];
+				endif;
 
-		        $status = 'Pendiente';
+				$text = [];
 
-		        if($response) {
+				foreach($codes as $index=>$codigo_seguimiento) :
 
-		        	$response_data  = json_decode($response);
-					
-		        	if(isset($response_data->estado_actual->gestion_actual) && $response_data->estado_actual->gestion_actual) {
+			        $response = $api->tracking_envio( [
+			            'codigo_seguimiento'    => $codigo_seguimiento,
+			            //'cliente_codigo_barra'  => $codigo_seguimiento
+			        ] );
 
-		        		$status = $response_data->estado_actual->gestion_actual;
+			        $status = 'Pendiente';
 
-		        	} else {
+			        if($response) {
 
-		        	}
+			        	$response_data  = json_decode($response);
+						
+			        	if(isset($response_data->estado_actual->gestion_actual) && $response_data->estado_actual->gestion_actual) {
 
-		        } else {
-		        	// For debug only
-		        	// $order->add_order_note( $response );
-		        }
+			        		$status = $response_data->estado_actual->gestion_actual;
+
+			        	} else {
+
+			        	}
+
+			        } else {
+			        	// For debug only
+			        	// $order->add_order_note( $response );
+			        }
+
+			        $text[] = '<li>Código de seguimiento ('.($index+1).' de '.count($codes).'): <b>'.$codigo_seguimiento.'</b> - Estado: '.$status.'</li>';
+
+			    endforeach;
 
 		        echo '<a href="'.$order->get_meta('postalchile_gestion_url_etiqueta1').'" target="_blank"><b>Etiqueta 1</b></a> | ';
 		        echo '<a href="'.$order->get_meta('postalchile_gestion_url_etiqueta2').'" target="_blank"><b>Etiqueta 2</b></a> | ';
 		        echo '<a href="'.$order->get_meta('postalchile_gestion_url_nomina').'" target="_blank"><b>Nómina</b></a>';
 
 		        echo '<ul>';
-		        echo '<li>Código de seguimiento: <b>'.$codigo_seguimiento.'</b></li>';
 		        echo '<li>Valor del envío: <b>'.wc_price($order->get_meta('postalchile_valor')).'</b></li>';
-		        echo '<li>Estado del envío: <b>'.$status.'</b></li>';
+		        echo implode('', $text);
 		        echo '</ul>';
 		        echo '<p>Conoce el historial completo ingresando a <a href="https://www.postalchile.cl/tra_index.htm#" target="_blank">https://www.postalchile.cl/tra_index.htm#</a>';
 

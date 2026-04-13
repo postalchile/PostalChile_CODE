@@ -12,10 +12,10 @@ $settings   = json_decode(json_encode(get_option( 'woocommerce_postalchile-shipp
 
 $api        = new Postalchile_API();
 
-$length 	= 78;
-$width  	= 34;
-$height 	= 20;
-$weight 	= 18.1;
+$length 	= 1;
+$width  	= 1;
+$height 	= 1;
+$weight 	= 1;
 
 $state  	= 'bio bio';
 $city   	= 'concepcion';
@@ -154,9 +154,9 @@ $send = [
     'dest_mail'             => 'contacto@postalchile.cl',
     'tipo_envio'            => $settings->tipo_envio,
     'tipo_servicio'         => $settings->tipo_servicio,
-    'largo'                 => $length,
-    'ancho'                 => $width,
-    'alto'                  => $height,
+    'largo'                 => $settings->standar_length,
+    'ancho'                 => $settings->standar_width,
+    'alto'                  => $settings->standar_height,
     'peso'                  => $weight,
     'contenido_descripcion' => "Prueba de conexión API",
     'contenido_valor'       => 55000,
@@ -214,3 +214,100 @@ $alert_content  = !$codigo_seguimiento ? 'Para realizar la prueba de anulación 
 $panel_title    = 'Anulación de envío';
 
 include plugin_dir_path( __FILE__ ) . 'api-test-table.php';
+
+// START MULTIBUTOS
+
+$send = [
+    'remit_rut'             => $settings->remit_rut,
+    'remit_nombres'         => $settings->remit_nombres,
+    'remit_apellidos'       => $settings->remit_apellidos,
+    'remit_dir_calle'       => $settings->remit_dir_calle,
+    'remit_dir_numero'      => $settings->remit_dir_numero,
+    'remit_dir_adicional'   => $settings->remit_dir_adicional,
+    'remit_observaciones'   => $settings->remit_observaciones,
+    'remit_region'          => $settings->remit_region,
+    'remit_comuna'          => $settings->remit_comuna,
+    'remit_fono'            => $settings->remit_fono,
+    'remit_mail'            => $settings->remit_mail,
+    'dest_rut'              => '1-9',
+    'dest_nombres'          => 'Postal',
+    'dest_apellidos'        => 'Chile',
+    'dest_dir_calle'        => 'Martinez de Rozas',
+    'dest_dir_numero'       => '3600',
+    'dest_dir_adicional'    => 'Local 201',
+    'dest_observaciones'    => false,
+    'dest_region'           => $state,
+    'dest_comuna'           => $city,
+    'dest_fono'             => '999208501',
+    'dest_mail'             => 'contacto@postalchile.cl',
+    'tipo_envio'            => $settings->tipo_envio,
+    'tipo_servicio'         => $settings->tipo_servicio,
+    'largo'                 => $length,
+    'ancho'                 => $width,
+    'alto'                  => $height,
+    'peso'                  => $weight,
+    'contenido_descripcion' => "Prueba de conexión API",
+    'contenido_valor'       => 55000,
+    'cliente_codigo_barra'  => 'WC-TEST',
+    'cliente_orden_compra'  => '1234567890',
+    'numero_bultos'         => 2
+];
+
+$api_settings   = $api->set_api_json_request( 'v2/solicitar_envio', $send );
+$response       = $api->solicitar_envio($send);
+$response_data  = json_decode($response);
+
+$codigos_seguimiento = isset($response_data->servicio->codigos_seguimiento) && $response_data->servicio->codigos_seguimiento ? $response_data->servicio->codigos_seguimiento : 0;
+$valor               = isset($response_data->servicio->valor) && $response_data->servicio->valor ? $response_data->servicio->valor : 0;
+
+$test_data = json_decode(json_encode([
+    [
+        'title'     => 'Datos enviados: Solicitud de envío',
+        'content'   => $api_settings
+    ],
+    [
+        'title'     => 'Datos recibidos: Solicitud de envío',
+        'content'   => $response_data
+    ]
+]));
+
+$mensaje        = isset($response_data->retorno->mensaje) ? $response_data->retorno->mensaje : false;
+$alert_color    = isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0 ? 'success' : 'danger';
+$alert_content  = isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0 ? $mensaje : '<b>Error al crear:</b> '.$mensaje;
+$panel_title    = 'Solicitud de envío (MultiBultos)';
+
+include plugin_dir_path( __FILE__ ) . 'api-test-table.php';
+
+// START ANULACIONES
+
+if($codigos_seguimiento) :
+    foreach($codigos_seguimiento as $codigo_seguimiento) :
+
+        $send = [
+            'codigo_seguimiento' => $codigo_seguimiento
+        ];
+
+        $api_settings   = $api->set_api_json_request( 'anular_envio', $send );
+        $response       = $api->anular_envio($send);
+        $response_data  = json_decode($response);
+
+        $test_data = json_decode(json_encode([
+            [
+                'title'     => 'Datos enviados: Anulación de envío',
+                'content'   => $api_settings
+            ],
+            [
+                'title'     => 'Datos recibidos: Anulación de envío',
+                'content'   => $response_data
+            ]
+        ]));
+
+        $mensaje        = isset($response_data->retorno->mensaje) ? $response_data->retorno->mensaje : false;
+        $alert_color    = !$codigo_seguimiento ? 'warning' : (isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0 ? 'success' : 'danger');
+        $alert_content  = !$codigo_seguimiento ? 'Para realizar la prueba de anulación de envío primero se requiere pasar la prueba de Solicitud de envío' : (isset($response_data->retorno->codigo) && $response_data->retorno->codigo==0 ? $mensaje : '<b>Error al crear:</b> '.$mensaje);
+        $panel_title    = 'Anulación de envío (MultiBultos) - Cod. '.$codigo_seguimiento;
+
+        include plugin_dir_path( __FILE__ ) . 'api-test-table.php';
+
+    endforeach;
+endif;
